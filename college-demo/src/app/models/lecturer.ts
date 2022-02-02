@@ -1,5 +1,5 @@
 export interface Lecturer {
-    id: number;
+    id?: number;
     streamId: number;
     firstName: string;
     lastName: string;

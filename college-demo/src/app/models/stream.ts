@@ -1,5 +1,5 @@
 export interface Stream {
-    id: number;
+    id?: number;
     name: string;
     noOfYears: number;
 }
