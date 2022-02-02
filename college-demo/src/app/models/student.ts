@@ -1,5 +1,6 @@
 export interface Student {
-    rollNo: number;
+    id: number;
+    collegeId: number;
     firstName: string;
     lastName: string;
     streamId: number;

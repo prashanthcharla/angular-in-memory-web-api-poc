@@ -2,8 +2,8 @@ import { Lecturer } from "./lecturer";
 import { Student } from "./student";
 
 export interface College {
+    id: number;
     location: string;
-    students: Array<Student>;
-    lecturers: Array<Lecturer>;
-    principal: Lecturer;
+    name: string,
+    principalId: number
 }
