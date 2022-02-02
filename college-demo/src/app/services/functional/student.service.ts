@@ -1,21 +1,62 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Student } from 'src/app/models/student';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StudentService {
+export class StudentService implements OnDestroy {
 
-  constructor(private _http: HttpClient) { }
+  private requestUrl: string;
 
-  addStudent(student: Student) { }
+  studentsData: BehaviorSubject<Array<Student>>;
+  studentsData$: Observable<Array<Student>>;
 
-  getStudentDetails(id: number) { }
+  private subscriptions: Subscription;
 
-  getAllStudentsDetails() { }
+  constructor(private _http: HttpClient) {
+    this.requestUrl = "api/student/";
+    this.studentsData = new BehaviorSubject<Array<Student>>([]);
+    this.studentsData$ = this.studentsData.asObservable();
 
-  updateStudentDetails(id: number, student: Student) { }
+    this.subscriptions = new Subscription();
+  }
 
-  removeStudent(id: number) { }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.studentsData.complete();
+  }
+
+  addStudent(student: Student) {
+    let response$ = this._http.post<Student>(this.requestUrl, student);
+
+    this.subscriptions.add(
+      response$.subscribe(data => data ? this.getAllStudentsDetails() : null, error => console.log(error))
+    );
+  }
+
+  getAllStudentsDetails() {
+    let response$ = this._http.get<Array<Student>>(this.requestUrl);
+
+    this.subscriptions.add(
+      response$.subscribe(data => this.studentsData.next(data), error => console.log(error))
+    );
+  }
+
+  updateStudentDetails(id: number, student: Student) {
+    let response$ = this._http.put<Student>(this.requestUrl + id, student);
+
+    this.subscriptions.add(
+      response$.subscribe(data => data ? this.getAllStudentsDetails() : null, error => console.log(error))
+    );
+  }
+
+  removeStudent(id: number) {
+    let response$ = this._http.delete<Student>(this.requestUrl + id);
+
+    this.subscriptions.add(
+      response$.subscribe(data => data ? this.getAllStudentsDetails() : null, error => console.log(error))
+    );
+  }
 }
