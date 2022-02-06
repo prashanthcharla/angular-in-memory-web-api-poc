@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { COLLEGE_LOADING_MESSAGE } from 'src/app/common/Constants';
+import { COLLEGE_LOADING_MESSAGE, ERROR_MESSAGE } from 'src/app/common/Constants';
 import { College } from 'src/app/models/college';
 import { UiCommonService } from '../ui-common.service';
 
@@ -46,7 +46,7 @@ export class CollegeService implements OnDestroy {
     let response$ = this._http.post<College>(this.requestUrl, college);
 
     this.subscriptions.add(
-      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => console.log(error))
+      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -56,9 +56,9 @@ export class CollegeService implements OnDestroy {
 
     this.subscriptions.add(
       response$.subscribe(data => {
-        this.collegesData.next(data), error => console.log(error);
+        this.collegesData.next(data);
         this.uiCommonService.loadingMessage.next('');
-      })
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -66,7 +66,7 @@ export class CollegeService implements OnDestroy {
     let response$ = this._http.put<College>(this.requestUrl + id, college);
 
     this.subscriptions.add(
-      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => console.log(error))
+      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -74,7 +74,7 @@ export class CollegeService implements OnDestroy {
     let response$ = this._http.delete<College>(this.requestUrl + id);
 
     this.subscriptions.add(
-      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => console.log(error))
+      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 }

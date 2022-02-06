@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { ERROR_MESSAGE } from 'src/app/common/Constants';
 import { Student } from 'src/app/models/student';
 import { UiCommonService } from '../ui-common.service';
 import { CollegeService } from './college.service';
@@ -44,8 +45,8 @@ export class StudentService implements OnDestroy {
     this.subscriptions.add(
       response$.subscribe(data => {
         this.isStudentFormSubmitDisabled.next(false);
-        data ? this.getAllStudentsDetails() : null, error => console.log(error);
-      })
+        data ? this.getAllStudentsDetails() : null;
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -55,8 +56,8 @@ export class StudentService implements OnDestroy {
     this.subscriptions.add(
       response$.subscribe(data => {
         console.log(data);
-        this.studentsData.next(data), error => console.log(error);
-      })
+        this.studentsData.next(data);
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -68,7 +69,7 @@ export class StudentService implements OnDestroy {
       response$.subscribe(data => {
         this.isStudentFormSubmitDisabled.next(false);
         this.getAllStudentsDetails();
-      })
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -76,7 +77,7 @@ export class StudentService implements OnDestroy {
     let response$ = this._http.delete<Student>(this.requestUrl + id);
 
     this.subscriptions.add(
-      response$.subscribe(data => this.getAllStudentsDetails())
+      response$.subscribe(data => this.getAllStudentsDetails(), error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 

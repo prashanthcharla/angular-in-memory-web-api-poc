@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { ERROR_MESSAGE } from 'src/app/common/Constants';
 import { Lecturer } from 'src/app/models/lecturer';
 import { UiCommonService } from '../ui-common.service';
 import { CollegeService } from './college.service';
@@ -44,8 +45,8 @@ export class LecturerService {
     this.subscriptions.add(
       response$.subscribe(data => {
         this.isLecturerFormSubmitDisabled.next(false);
-        data ? this.getAllLecturerDetails() : null, error => console.log(error)
-      })
+        data ? this.getAllLecturerDetails() : null
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -53,7 +54,7 @@ export class LecturerService {
     let response$ = this._http.get<Array<Lecturer>>(this.requestUrl);
 
     this.subscriptions.add(
-      response$.subscribe(data => this.lecturersData.next(data), error => console.log(error))
+      response$.subscribe(data => this.lecturersData.next(data), error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -65,7 +66,7 @@ export class LecturerService {
       response$.subscribe(data => {
         this.isLecturerFormSubmitDisabled.next(false);
         this.getAllLecturerDetails();
-      })
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -73,7 +74,7 @@ export class LecturerService {
     let response$ = this._http.delete<Lecturer>(this.requestUrl + id);
 
     this.subscriptions.add(
-      response$.subscribe(data => this.getAllLecturerDetails())
+      response$.subscribe(data => this.getAllLecturerDetails(), error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
