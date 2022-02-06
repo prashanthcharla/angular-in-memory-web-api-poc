@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { COLLEGE_LOADING_MESSAGE } from 'src/app/common/Constants';
 import { College } from 'src/app/models/college';
+import { UiCommonService } from '../ui-common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +15,26 @@ export class CollegeService implements OnDestroy {
   collegesData: BehaviorSubject<Array<College>>;
   collegesData$: Observable<Array<College>>;
 
+  latestOpenedPanelId: Subject<number>;
+  latestClosedPanelId: Subject<number>;
+
+  currentActiveClgId: number;
+
   private subscriptions: Subscription;
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, 
+    private uiCommonService: UiCommonService) {
     this.requestUrl = "api/college/";
     this.collegesData = new BehaviorSubject<Array<College>>([]);
     this.collegesData$ = this.collegesData.asObservable();
+    this.latestClosedPanelId = new Subject<number>();
+    this.latestOpenedPanelId = new Subject<number>();
 
     this.subscriptions = new Subscription();
+
+    this.subscriptions.add(
+      this.latestOpenedPanelId.asObservable().subscribe(collegeId => this.currentActiveClgId = collegeId)
+    );
   }
 
   ngOnDestroy(): void {
@@ -37,10 +51,14 @@ export class CollegeService implements OnDestroy {
   }
 
   getAllCollegesDetails() {
+    this.uiCommonService.loadingMessage.next(COLLEGE_LOADING_MESSAGE);
     let response$ = this._http.get<Array<College>>(this.requestUrl);
 
     this.subscriptions.add(
-      response$.subscribe(data => this.collegesData.next(data), error => console.log(error))
+      response$.subscribe(data => {
+        this.collegesData.next(data), error => console.log(error);
+        this.uiCommonService.loadingMessage.next('');
+      })
     );
   }
 
