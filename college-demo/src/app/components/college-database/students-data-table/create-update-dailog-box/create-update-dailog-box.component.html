@@ -1,0 +1,37 @@
+<div>
+    <h2 mat-dialog-title>{{ title }}</h2>
+    <div class="content">
+        <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input matInput formControlName="firstName">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput formControlName="lastName">
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Stream</mat-label>
+                <mat-select formControlName="stream" (selectionChange)="updateCurrentYearDropdown()">
+                    <mat-option *ngFor="let stream of streamDropdownValues" [value]="stream.id">{{stream.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Current Year</mat-label>
+                <mat-select formControlName="currentYear">
+                    <mat-option *ngFor="let year of currentStreamYearDropdownValues" [value]="year">{{year}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div mat-dialog-actions align="center">
+                <button type="button" mat-raised-button mat-dialog-close>Cancel</button>
+                <button type="submit" mat-raised-button [disabled]="disableSave$ | async">{{ submitBtnLabel }}</button>
+            </div>
+        </form>
+    </div>
+</div>

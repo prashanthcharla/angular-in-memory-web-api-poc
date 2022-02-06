@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { Student } from 'src/app/models/student';
+import { UiCommonService } from '../ui-common.service';
 import { CollegeService } from './college.service';
 
 @Injectable({
@@ -20,7 +21,8 @@ export class StudentService implements OnDestroy {
   private subscriptions: Subscription;
 
   constructor(private _http: HttpClient,
-    private collegeService: CollegeService) {
+    private collegeService: CollegeService,
+    private uiCommonService: UiCommonService) {
     this.requestUrl = "api/student/";
     this.studentsData = new BehaviorSubject<Array<Student>>([]);
     this.studentsData$ = this.studentsData.asObservable();
@@ -65,7 +67,7 @@ export class StudentService implements OnDestroy {
     this.subscriptions.add(
       response$.subscribe(data => {
         this.isStudentFormSubmitDisabled.next(false);
-        data ? this.getAllStudentsDetails() : null, error => console.log(error);
+        this.getAllStudentsDetails();
       })
     );
   }
@@ -86,6 +88,7 @@ export class StudentService implements OnDestroy {
         (collegeId, students) => {
           if(collegeId && students) {
             this.latestFilteredStudentData.next(students.filter(obj => obj.collegeId == collegeId));
+            this.uiCommonService.load.next(false);
           }
         }
       ).subscribe()

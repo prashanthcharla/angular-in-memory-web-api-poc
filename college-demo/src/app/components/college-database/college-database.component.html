@@ -1,0 +1,34 @@
+<div>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ title }}</mat-card-title>
+            <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
+            <span class="loadingMessage">{{ loadingMessage$ | async }}</span>
+        </mat-card-header>
+        <mat-card-content *ngIf = "(loadingMessage$ | async).length == 0">
+            <!-- <div class="btns-grp">
+                <button mat-raised-button class="btn">Add College</button>
+                <button mat-raised-button class="btn">Update College</button>
+                <button mat-raised-button class="btn">Delete College</button>
+            </div> -->
+            <mat-accordion multi>
+                <mat-expansion-panel *ngFor = "let college of collegesList$ | async; index as i" (opened)="panelOpen(college.id, i)" (closed)="panelClose(college.id, i)" [expanded] = "isExpansionPanelExpanded(i)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="college">{{ college.name }}</span>
+                            <span class="location">{{ college.location }}</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-tab-group>
+                        <mat-tab label="Students"> 
+                            <app-students-data-table [displayedColumns]="studentDisplayColumns"></app-students-data-table>     
+                        </mat-tab>
+                        <mat-tab label="Lecturers"> 
+                            <app-lecturers-data-table [displayedColumns]="lecturerDispalyColumns"></app-lecturers-data-table>    
+                        </mat-tab>
+                    </mat-tab-group>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-card-content>
+    </mat-card>
+</div>

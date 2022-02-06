@@ -9,3 +9,7 @@ export const STUDENT_UPDATE_FORM_HEADER: string = "Update Student Details";
 export const LECTURER_CREATE_FORM_HEADER: string = "Lecturer Registration";
 
 export const LECTURER_UPDATE_FORM_HEADER: string = "Update Lecturer Details";
+
+export const SAVE_BTN_LABEL: string = "Save";
+
+export const UPDATE_BTN_LABEL: string = "Update";
