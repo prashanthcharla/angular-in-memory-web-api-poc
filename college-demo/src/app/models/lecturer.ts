@@ -3,4 +3,5 @@ export interface Lecturer {
     streamId: number;
     firstName: string;
     lastName: string;
+    collegeId: number;
 }
