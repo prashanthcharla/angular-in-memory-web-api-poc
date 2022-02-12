@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { SAVE_BTN_LABEL, STUDENT_CREATE_FORM_HEADER, STUDENT_UPDATE_FORM_HEADER, UPDATE_BTN_LABEL } from 'src/app/common/Constants';
@@ -41,24 +41,24 @@ export class StudentCreateUpdateDailogBoxComponent implements OnInit {
   ngOnInit(): void {
     this.dialogRef.updateSize("27%");
     this.action = this.data.action.toLowerCase();
+
+    this.studentForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      stream: ['', Validators.required],
+      currentYear: ['', Validators.required]
+    });
+
     if (this.action === "save") {
       this.title = STUDENT_CREATE_FORM_HEADER;
       this.submitBtnLabel = SAVE_BTN_LABEL;
-      this.studentForm = this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        stream: [],
-        currentYear: []
-      });
     } else if (this.action === "update") {
       this.title = STUDENT_UPDATE_FORM_HEADER;
       this.submitBtnLabel = UPDATE_BTN_LABEL;
-      this.studentForm = this.formBuilder.group({
-        firstName: [this.data.student.firstName],
-        lastName: [this.data.student.lastName],
-        stream: [this.data.student.streamId],
-        currentYear: [this.data.student.currStreamYear]
-      });
+      this.studentForm.get('firstName').setValue(this.data.student.firstName);
+      this.studentForm.get('lastName').setValue(this.data.student.lastName);
+      this.studentForm.get('stream').setValue(this.data.student.streamId);
+      this.studentForm.get('currentYear').setValue(this.data.student.currStreamYear);
     }
 
     this.disableSave$ = this.studentervice.isStudentFormSubmitDisabled.asObservable();
