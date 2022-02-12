@@ -51,7 +51,6 @@ export class StudentsDataTableComponent implements OnInit, AfterViewInit {
 
     this.subscriptions.add(
       this.studentService.latestFilteredStudentData.asObservable().subscribe(data => {
-        console.log("Table", data);
         this.dataSource.data = data;
       })
     );

@@ -55,7 +55,6 @@ export class StudentService implements OnDestroy {
 
     this.subscriptions.add(
       response$.subscribe(data => {
-        console.log(data);
         this.studentsData.next(data);
       }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );

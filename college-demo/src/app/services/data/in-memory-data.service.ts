@@ -18,11 +18,11 @@ export class InMemoryDataService implements InMemoryDbService {
   constructor() { }
 
   createDb(reqInfo?: RequestInfo): {} | Observable<{}> | Promise<{}> {
-    return { 
-      stream: STREAM_DATA, 
-      student: STUDENT_DATA, 
-      lecturer: LECTURER_DATA, 
-      college: COLLEGE_DATA 
+    return {
+      stream: STREAM_DATA,
+      student: STUDENT_DATA,
+      lecturer: LECTURER_DATA,
+      college: COLLEGE_DATA
     };
   }
 
