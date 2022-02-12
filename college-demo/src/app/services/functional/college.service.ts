@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { COLLEGE_LOADING_MESSAGE, ERROR_MESSAGE } from 'src/app/common/Constants';
 import { College } from 'src/app/models/college';
 import { UiCommonService } from '../ui-common.service';
@@ -18,11 +18,18 @@ export class CollegeService implements OnDestroy {
   latestOpenedPanelId: Subject<number>;
   latestClosedPanelId: Subject<number>;
 
+  private latestFilteredCollegesData: Subject<Array<College>>;
+  latestFilteredCollegesData$: Observable<Array<College>>;
+
+  isCollegeFormSubmitDisabled: BehaviorSubject<boolean>;
+
   currentActiveClgId: number;
+
+  refreshCollegeData: Subject<boolean>;
 
   private subscriptions: Subscription;
 
-  constructor(private _http: HttpClient, 
+  constructor(private _http: HttpClient,
     private uiCommonService: UiCommonService) {
     this.requestUrl = "api/college/";
     this.collegesData = new BehaviorSubject<Array<College>>([]);
@@ -31,10 +38,17 @@ export class CollegeService implements OnDestroy {
     this.latestOpenedPanelId = new Subject<number>();
 
     this.subscriptions = new Subscription();
+    this.latestFilteredCollegesData = new Subject<Array<College>>();
+    this.latestFilteredCollegesData$ = this.latestFilteredCollegesData.asObservable();
+    this.isCollegeFormSubmitDisabled = new BehaviorSubject<boolean>(false);
+
+    this.refreshCollegeData = new Subject<boolean>();
 
     this.subscriptions.add(
       this.latestOpenedPanelId.asObservable().subscribe(collegeId => this.currentActiveClgId = collegeId)
     );
+
+    this.filterCollegeData();
   }
 
   ngOnDestroy(): void {
@@ -46,7 +60,10 @@ export class CollegeService implements OnDestroy {
     let response$ = this._http.post<College>(this.requestUrl, college);
 
     this.subscriptions.add(
-      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
+      response$.subscribe(data => {
+        this.isCollegeFormSubmitDisabled.next(false);
+        data ? this.getAllCollegesDetails() : null;
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -66,7 +83,10 @@ export class CollegeService implements OnDestroy {
     let response$ = this._http.put<College>(this.requestUrl + id, college);
 
     this.subscriptions.add(
-      response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
+      response$.subscribe(data => {
+        this.isCollegeFormSubmitDisabled.next(false);
+        this.getAllCollegesDetails();
+      }, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
     );
   }
 
@@ -75,6 +95,15 @@ export class CollegeService implements OnDestroy {
 
     this.subscriptions.add(
       response$.subscribe(data => data ? this.getAllCollegesDetails() : null, error => this.uiCommonService.loadingMessage.next(ERROR_MESSAGE))
+    );
+  }
+
+  filterCollegeData() {
+    this.subscriptions.add(
+      this.collegesData$.subscribe(data => {
+        this.latestFilteredCollegesData.next(data);
+        this.uiCommonService.load.next(false);
+      })
     );
   }
 }

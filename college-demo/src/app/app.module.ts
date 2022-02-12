@@ -25,6 +25,7 @@ import { StudentsDataTableComponent } from './components/college-database/studen
 import { InMemoryDataService } from './services/data/in-memory-data.service';
 import { MatIconModule } from '@angular/material/icon';
 import { DeletePromptDailogComponent } from './components/college-database/delete-prompt-dailog/delete-prompt-dailog.component';
+import { CollegeCreateUpdateDailogBoxComponent } from './components/college-database/create-update-dailog-box/create-update-dailog-box.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DeletePromptDailogComponent } from './components/college-database/delet
     StudentsDataTableComponent,
     StudentCreateUpdateDailogBoxComponent,
     LecturerCreateUpdateDailogBoxComponent,
-    DeletePromptDailogComponent
+    DeletePromptDailogComponent,
+    CollegeCreateUpdateDailogBoxComponent
   ],
   imports: [
     BrowserModule,

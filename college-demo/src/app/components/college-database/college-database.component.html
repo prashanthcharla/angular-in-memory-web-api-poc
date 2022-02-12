@@ -6,13 +6,13 @@
             <span class="loadingMessage">{{ loadingMessage$ | async }}</span>
         </mat-card-header>
         <mat-card-content *ngIf = "(loadingMessage$ | async).length == 0">
-            <!-- <div class="btns-grp">
-                <button mat-raised-button class="btn">Add College</button>
-                <button mat-raised-button class="btn">Update College</button>
-                <button mat-raised-button class="btn">Delete College</button>
-            </div> -->
+            <div class="btns-grp">
+                <button mat-raised-button class="btn" (click)="onCreateClick()">Add College</button>
+                <button mat-raised-button class="btn" (click)="onUpdateClick()">Update College</button>
+                <!-- <button mat-raised-button class="btn">Delete College</button> -->
+            </div>
             <mat-accordion multi>
-                <mat-expansion-panel *ngFor = "let college of collegesList$ | async; index as i" (opened)="panelOpen(college.id, i)" (closed)="panelClose(college.id, i)" [expanded] = "isExpansionPanelExpanded(i)">
+                <mat-expansion-panel *ngFor = "let college of collegesList; index as i" (opened)="panelOpen(college.id, i)" (closed)="panelClose(college.id, i)" [expanded] = "isExpansionPanelExpanded(i)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <span class="college">{{ college.name }}</span>
