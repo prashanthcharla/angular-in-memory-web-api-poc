@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { College } from 'src/app/models/college';
 import { CollegeService } from 'src/app/services/functional/college.service';
 import { UiCommonService } from 'src/app/services/ui-common.service';
@@ -59,10 +59,6 @@ export class CollegeDatabaseComponent implements OnInit {
   isExpansionPanelExpanded(index: number) {
     return this.activePanel == index;
   }
-
-  // onUpdateClick() {
-  //   this.openCreateOrUpdateDialog("update", student);
-  // }
 
   onCreateClick() {
     this.openCreateOrUpdateDialog("save");

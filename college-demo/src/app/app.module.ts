@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +26,8 @@ import { InMemoryDataService } from './services/data/in-memory-data.service';
 import { MatIconModule } from '@angular/material/icon';
 import { DeletePromptDailogComponent } from './components/college-database/delete-prompt-dailog/delete-prompt-dailog.component';
 import { CollegeCreateUpdateDailogBoxComponent } from './components/college-database/create-update-dailog-box/create-update-dailog-box.component';
+import { MyInterceptor } from './interceptors/TestInterceptor';
+import { environment } from 'src/environments/environment.prod';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { CollegeCreateUpdateDailogBoxComponent } from './components/college-data
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false }),
+    environment.production ?
+      HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false, delay: 3000 }) :
+      null,
     MatCardModule,
     MatExpansionModule,
     MatTabsModule,
@@ -59,7 +63,9 @@ import { CollegeCreateUpdateDailogBoxComponent } from './components/college-data
     MatIconModule,
     MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: MyInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
