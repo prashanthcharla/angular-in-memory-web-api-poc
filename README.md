@@ -7,7 +7,8 @@ Project which demonstrates the real time usage of `angular-in-memory-web-api` li
 ## What's included
 
 - Took a simple [use case](#functionality-overview) and performed CRUD operations.
-- Using HttpInterceptor in angular, tested whether calls are getting intercepted while using this library
+- Using HttpInterceptor in angular, tested whether calls are getting intercepted while using this library.
+- Developed application with proper UI using angular material framework.
 ## Technology Stack
 
 - Angular: 9.1.13
