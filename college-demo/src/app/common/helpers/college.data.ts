@@ -10,7 +10,7 @@ export const COLLEGE_DATA: Array<College> = [
     {
         id: 2,
         location: "Banglore, Karnataka",
-        name: "Indian Institue of Management",
+        name: "Indian Institute of Management",
         principalId: 0
     },
 ];

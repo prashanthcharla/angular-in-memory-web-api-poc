@@ -20,7 +20,7 @@ export class MyInterceptor implements HttpInterceptor {
             retry(1),
 
             // Check if the request is related to college, so that we want to modify only the response from collge API'S 
-            filter(event => event instanceof HttpResponse && reqClone.url.includes('college')),
+            // filter(event => event instanceof HttpResponse && reqClone.url.includes('college')),
 
             // tap((response: HttpResponse<any>) => console.log("Reponse - ", response.body)),
 
