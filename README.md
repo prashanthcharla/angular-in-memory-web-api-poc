@@ -1,7 +1,7 @@
 
 # Angular In-Memory Web API - POC
 
-Project which demonstrates the real time usage of `angular-in-memory-web-api` library.
+Project which demonstrates the real time usage of `angular-in-memory-web-api` library. To see how it works, simply access the project's [GitHub Pages](https://prashanthcharla.github.io/angular-in-memory-web-api-poc/). 
 
 [angular-in-memory-web-api](https://github.com/angular/in-memory-web-api) library works by intercepting all the HTTP calls in your application and returning some data you defined instead data from actual backend. Without this library, the calls would otherwise go to the remote server. This library redirects them to an in-memory data store that you control in the frontend.
 ## What's included
